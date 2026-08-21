@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Exam Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="result-container">
+
+    <!-- RESULT HEADER -->
+
+    <div class="result-header">
+
+        <h1>Exam Submitted Successfully</h1>
+
+        <p>
+            Well done, <strong>{{ student_name }}</strong>.
+        </p>
+
+        <p>
+            Your examination has been submitted and marked.
+        </p>
+
+    </div>
+
+
+    <!-- SCORE CARD -->
+
+    <div class="score-card">
+
+        <div class="score-circle">
+
+            <span class="score-number">
+                {{ score }}
+            </span>
+
+            <span class="score-total">
+                / {{ total }}
+            </span>
+
+        </div>
+
+        <div class="score-details">
+
+            <div>
+                <span>Percentage</span>
+                <strong>{{ "%.1f"|format(percentage) }}%</strong>
+            </div>
+
+            <div>
+                <span>Grade</span>
+                <strong>{{ grade }}</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUESTIONS -->
+
+    <h2 class="review-title">
+        Answer Review
+    </h2>
+
+
+    {% for question in questions %}
+
+        {% set selected = answers[question.id|string] %}
+
+        <div class="review-card
+            {% if selected is not none and selected|int == question.answer %}
+                correct
+            {% elif selected is none %}
+                unanswered
+            {% else %}
+                wrong
+            {% endif %}
+        ">
+
+            <div class="review-question">
+
+                <span class="review-number">
+                    Question {{ question.id }}
+                </span>
+
+                <h3>
+                    {{ question.question }}
+                </h3>
+
+            </div>
+
+
+            <div class="review-options">
+
+                {% for option in question.options %}
+
+                    {% if selected is not none and selected|int == loop.index0 %}
+
+                        {% if loop.index0 == question.answer %}
+
+                            <div class="review-option selected-correct">
+
+                                <span class="answer-icon">✓</span>
+
+                                <span>
+                                    {{ "ABCD"[loop.index0] }}.
+                                    {{ option }}
+                                </span>
+
+                                <strong>Correct Answer</strong>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="review-option selected-wrong">
+
+                                <span class="answer-icon">✗</span>
+
+                                <span>
+                                    {{ "ABCD"[loop.index0] }}.
+                                    {{ option }}
+                                </span>
+
+                                <strong>Your Answer</strong>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% elif loop.index0 == question.answer %}
+
+                        <div class="review-option correct-answer">
+
+                            <span class="answer-icon">✓</span>
+
+                            <span>
+                                {{ "ABCD"[loop.index0] }}.
+                                {{ option }}
+                            </span>
+
+                            <strong>Correct Answer</strong>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="review-option">
+
+                            <span>
+                                {{ "ABCD"[loop.index0] }}.
+                                {{ option }}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+
+            {% if selected is not none and selected|int != question.answer %}
+
+                <div class="correct-answer-message">
+
+                    Correct answer:
+
+                    <strong>
+                        {{ "ABCD"[question.answer] }}.
+                        {{ question.options[question.answer] }}
+                    </strong>
+
+                </div>
+
+            {% elif selected is none %}
+
+                <div class="unanswered-message">
+
+                    You did not answer this question.
+
+                    <br>
+
+                    Correct answer:
+
+                    <strong>
+                        {{ "ABCD"[question.answer] }}.
+                        {{ question.options[question.answer] }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+
+    <!-- FINISH -->
+
+    <div class="finish-section">
+
+        <h2>Exam Complete</h2>
+
+        <p>
+            Your result has been recorded.
+        </p>
+
+        <a href="{{ url_for('login') }}"
+           class="back-button">
+
+            Return to Login
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

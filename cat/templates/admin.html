@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- HEADER -->
+
+    <div class="admin-header">
+    
+
+
+ 
+        <div>
+
+    <a href="{{ url_for('export_results') }}"
+       class="admin-button">
+
+        📥 Export to Excel
+
+    </a>
+
+    <a href="{{ url_for('login') }}"
+       class="admin-button">
+
+        Student Login
+
+    </a>
+
+    <a href="{{ url_for('admin_logout') }}"
+       class="admin-button">
+
+        Logout
+
+    </a>
+
+</div>
+
+
+
+        <div>
+
+            <h1>Teacher Dashboard</h1>
+
+            <p>
+                Computer Applications CAT Results
+            </p>
+
+        </div>
+        <a href="{{ url_for('admin_logout') }}"
+   class="admin-button">
+
+    Logout
+
+</a>
+        <div>
+
+            <a href="{{ url_for('login') }}"
+               class="admin-button">
+
+                Student Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                Students
+            </span>
+
+            <strong>
+                {{ total_students }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                Questions
+            </span>
+
+            <strong>
+                30
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                Average
+            </span>
+
+            <strong>
+                {{ "%.1f"|format(average_score) }}%
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                Highest Score
+            </span>
+
+            <strong>
+
+                {% if results %}
+                    {{ results[0].score }}/30
+                {% else %}
+                    -
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-section">
+
+        <input
+            type="text"
+            id="studentSearch"
+            placeholder="Search by student ID or name..."
+            onkeyup="searchStudents()"
+        >
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div class="results-card">
+
+        <div class="results-header">
+
+            <h2>Student Results</h2>
+
+            <span>
+                {{ total_students }} completed
+            </span>
+
+        </div>
+
+
+        {% if results %}
+
+        <div class="table-container">
+
+            <table id="resultsTable">
+
+                <thead>
+
+                    <tr>
+
+    <th>Position</th>
+
+    <th>Student 1</th>
+
+    <th>Student 2</th>
+
+    <th>Score</th>
+
+    <th>Percentage</th>
+
+    <th>Grade</th>
+
+    <th>Submitted</th>
+
+</tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for result in results %}
+
+                   <tr>
+
+    <td>
+
+        {% if result.rank == 1 %}
+            🥇 1
+        {% elif result.rank == 2 %}
+            🥈 2
+        {% elif result.rank == 3 %}
+            🥉 3
+        {% else %}
+            {{ result.rank }}
+        {% endif %}
+
+    </td>
+
+
+    <td>
+
+        <strong>
+            {{ result.student1_name }}
+        </strong>
+
+        <br>
+
+        <small>
+            {{ result.student1_id }}
+        </small>
+
+    </td>
+
+
+    <td>
+
+        <strong>
+            {{ result.student2_name }}
+        </strong>
+
+        <br>
+
+        <small>
+            {{ result.student2_id }}
+        </small>
+
+    </td>
+
+
+    <td>
+        <strong>
+            {{ result.score }}/{{ result.total }}
+        </strong>
+    </td>
+
+
+    <td>
+        {{ "%.1f"|format(result.percentage) }}%
+    </td>
+
+
+    <td>
+
+        <span class="grade grade-{{ result.grade }}">
+            {{ result.grade }}
+        </span>
+
+    </td>
+
+
+    <td>
+        {{ result.submitted_at }}
+    </td>
+
+</tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+            <div class="no-results">
+
+                <h3>No Results Yet</h3>
+
+                <p>
+                    Students who complete the CAT will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script>
+
+function searchStudents() {
+
+    const input =
+        document.getElementById("studentSearch");
+
+    const filter =
+        input.value.toLowerCase();
+
+    const table =
+        document.getElementById("resultsTable");
+
+    if (!table) {
+        return;
+    }
+
+    const rows =
+        table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+
+        const text =
+            rows[i].textContent.toLowerCase();
+
+        if (text.includes(filter)) {
+
+            rows[i].style.display = "";
+
+        } else {
+
+            rows[i].style.display = "none";
+
+        }
+
+    }
+}
+
+</script>
+
+</body>
+</html>
