@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1>Teacher Login</h1>
+
+        <p class="subtitle">
+            Computer Applications CAT Administration
+        </p>
+
+        {% if error %}
+
+            <div class="login-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+        <form method="POST">
+
+            <label>
+                Admin Password
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter admin password"
+                required
+            >
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

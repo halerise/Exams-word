@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Computer CAT - Examination</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="exam-container">
+
+    <!-- HEADER -->
+
+    <div class="exam-header">
+
+        <div>
+            <h1>Computer Applications CAT</h1>
+
+            <p>
+                Microsoft Word & Basic Computer Knowledge
+            </p>
+        </div>
+
+        <div class="student-info">
+
+            <strong>{{ student_name }}</strong>
+
+            <span>
+                ID: {{ student_id }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div class="instructions">
+
+        <h2>Instructions</h2>
+
+        <ul>
+            <li>Answer all 30 questions.</li>
+            <li>Select only one answer for each question.</li>
+            <li>Review your answers before submitting.</li>
+            <li>Click <strong>Submit Exam</strong> when you are finished.</li>
+        </ul>
+
+    </div>
+
+
+    <!-- EXAM FORM -->
+
+    <form method="POST"
+          action="{{ url_for('exam') }}"
+          id="examForm">
+
+<input type="hidden" name="student1_id" value="{{ student1_id }}">
+<input type="hidden" name="student1_name" value="{{ student1_name }}">
+
+<input type="hidden" name="student2_id" value="{{ student2_id }}">
+<input type="hidden" name="student2_name" value="{{ student2_name }}">
+
+        <!-- Hidden student information -->
+
+        <div class="student-info">
+
+    <strong>
+        Student 1: {{ student1_name }}
+    </strong>
+
+    <span>
+        ID: {{ student1_id }}
+    </span>
+
+    <strong>
+        Student 2: {{ student2_name }}
+    </strong>
+
+    <span>
+        ID: {{ student2_id }}
+    </span>
+
+</div>
+
+        <!-- QUESTIONS -->
+
+        {% for question in questions %}
+
+        <div class="question-card">
+
+            <div class="question-number">
+                Question {{ question.id }} of 30
+            </div>
+
+            <h3>
+                {{ question.question }}
+            </h3>
+
+
+            <div class="options">
+
+                {% for option in question.options %}
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="{{ loop.index0 }}"
+                    >
+
+                    <span>
+                        {{ "ABCD"[loop.index0] }}.
+                        {{ option }}
+                    </span>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+        <!-- SUBMIT -->
+
+        <div class="submit-section">
+
+            <h2>Finished?</h2>
+
+            <p>
+                Make sure you have answered all 30 questions
+                before submitting.
+            </p>
+
+            <button
+                type="submit"
+                class="submit-button"
+                onclick="return confirmSubmit()">
+
+                Submit Exam
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
